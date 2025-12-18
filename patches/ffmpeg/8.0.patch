@@ -32,11 +32,12 @@ index 43fe531fde..31fc3263c8 100644
              FFMAX(avctx->bit_rate, avctx->rc_max_rate);
  
      if (svt_enc->crf > 0) {
--        param->qp                   = svt_enc->crf;
-+        param->qp                   = FFMIN(MAX_QP_VALUE, (uint32_t)svt_enc->crf);
++        // Cap CRF at MAX_QP_VALUE + 0.75 to ensure extended offset stays in valid range (0-3)
++        float crf_capped            = FFMIN(svt_enc->crf, MAX_QP_VALUE + 0.75f);
++        param->qp                   = (uint32_t)crf_capped;
          param->rate_control_mode    = 0;
-+        uint32_t extended_q_index   = (uint32_t)(svt_enc->crf * 4);
-+        param->extended_crf_qindex_offset = extended_q_index - param->qp * 4;
++        // Calculate fractional offset for quarter-step CRF increments
++        param->extended_crf_qindex_offset = (uint32_t)((crf_capped - param->qp) * 4);
      } else if (svt_enc->qp > 0) {
          param->qp                   = svt_enc->qp;
          param->rate_control_mode    = 0;
