@@ -1,6 +1,6 @@
-# FFmpeg Static Auto-Builds
+# FFmpeg Static Auto-Builds (Fork with SVT-AV1-Essential) 
 
-This repository provides static Windows (x86 and x86_64) and Linux (x86_64, arm64) Builds of [FFmpeg master](https://github.com/FFmpeg/FFmpeg) and [latest release branch](https://github.com/FFmpeg/FFmpeg/tree/release/7.1) **with some patches necessary for smooth integration with [yt-dlp](https://github.com/yt-dlp/yt-dlp)**
+Static Windows (x86_64) and Linux (x86_64) Builds of ffmpeg master and latest release branch, featuring SVT-AV1-Essential.
 
 **Note**: The builds provided are only meant to be used with yt-dlp and any unrelated issues/patches will be rejected
 
@@ -16,8 +16,7 @@ This repository provides static Windows (x86 and x86_64) and Linux (x86_64, arm6
 
 ---
 
-## Patches Welcome
-Known issues for which patches are welcome:
+**Auto-Builds run ONLY for win64 and linux64. There are no win32/x86 auto-builds, though you can produce win32 builds yourself following the instructions below.**
 
 ### 1. More Builds
 
