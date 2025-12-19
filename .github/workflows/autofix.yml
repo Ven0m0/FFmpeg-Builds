@@ -1,4 +1,4 @@
-name: Autofix merge conflict
+name: autofix.ci
 on:
   workflow_dispatch:
 concurrency:
