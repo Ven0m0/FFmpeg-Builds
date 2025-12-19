@@ -9,11 +9,7 @@ ffbuild_depends() {
     echo opencl
 }
 
-ffbuild_enabled() {
-    [[ $TARGET != *32 ]] || return -1
-    (( $(ffbuild_ffver) >= 800 )) || return -1
-    return -1
-}
+ffbuild_enabled() { return 1; }
 
 ffbuild_dockerbuild() {
     mkdir build && cd build
