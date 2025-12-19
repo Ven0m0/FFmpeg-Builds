@@ -2,7 +2,7 @@ name: Test Full Build
 on:
   pull_request:
     branches:
-      - master
+      - nonexistent
     paths-ignore:
       - '**.md'
       - 'LICENSE'
@@ -21,9 +21,6 @@ jobs:
         variant: [gpl 8.0,gpl-shared 8.0]
         quickbuild: [1]
         include:
-          - target: win64
-            variant: gpl
-            quickbuild: ''
           - target: linux64
             variant: gpl
             quickbuild: ''

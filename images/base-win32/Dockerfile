@@ -1,4 +1,4 @@
-ARG GH_REPO=ghcr.io/btbn/ffmpeg-builds
+ARG GH_REPO=ghcr.io/yt-dlp/ffmpeg-builds
 FROM $GH_REPO/base:latest
 
 RUN --mount=src=ct-ng-config,dst=/.config \
@@ -18,6 +18,13 @@ RUN \
         -or -name "*.dll.a" \
         -delete && \
     mkdir /opt/ffbuild
+
+RUN \
+    dpkg --add-architecture i386 && \
+    apt-get -y update && \
+    apt-get -y install --no-install-recommends wine32 wine-stable && \
+    apt-get -y clean autoclean && \
+    rm -rf /var/lib/apt/lists/*
 
 ENV FFBUILD_TOOLCHAIN=i686-w64-mingw32 \
     FFBUILD_RUST_TARGET=i686-pc-windows-gnu

@@ -29,11 +29,24 @@ trap "rm -f -- '$BUILD_SCRIPT'" EXIT
 
 cat <<EOF >"$BUILD_SCRIPT"
     set -xe
+    shopt -s nullglob
     cd /ffbuild
     rm -rf ffmpeg prefix
 
     git clone --filter=blob:none --branch='$GIT_BRANCH' '$FFMPEG_REPO' ffmpeg
     cd ffmpeg
+
+    git config user.email "builder@localhost"
+    git config user.name "Builder"
+
+    PATCHES=('/patches/$GIT_BRANCH'/*.patch)
+    if [[ "\${#PATCHES[@]}" = 0 ]]; then
+        echo 'No patches found for $GIT_BRANCH'
+    fi
+    for patch in "\${PATCHES[@]}"; do
+        echo "Applying \$patch"
+        git apply "\$patch"
+    done
 
     ./configure --prefix=/ffbuild/prefix --pkg-config-flags="--static" \$FFBUILD_TARGET_FLAGS \$FF_CONFIGURE \
         --extra-cflags="\$FF_CFLAGS" --extra-cxxflags="\$FF_CXXFLAGS" --extra-libs="\$FF_LIBS" \
@@ -46,7 +59,7 @@ EOF
 
 [[ -t 1 ]] && TTY_ARG="-t" || TTY_ARG=""
 
-docker run --rm -i $TTY_ARG "${UIDARGS[@]}" -v "$PWD/ffbuild":/ffbuild -v "$BUILD_SCRIPT":/build.sh "$IMAGE" bash /build.sh
+docker run --rm -i $TTY_ARG "${UIDARGS[@]}" -v "$PWD/ffbuild":/ffbuild -v "$PWD/patches/ffmpeg/":/patches -v "$BUILD_SCRIPT":/build.sh "$IMAGE" bash /build.sh
 
 if [[ -n "$FFBUILD_OUTPUT_DIR" ]]; then
     mkdir -p "$FFBUILD_OUTPUT_DIR"
