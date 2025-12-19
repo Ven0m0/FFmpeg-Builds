@@ -1,10 +1,15 @@
 #!/bin/bash
 
 SCRIPT_REPO="https://github.com/xiph/vorbis.git"
-SCRIPT_COMMIT="84c023699cdf023a32fa4ded32019f194afcdad0"
+SCRIPT_COMMIT="851cce991da34adf5e1f3132588683758a6369ec"
+
+ffbuild_depends() {
+    echo base
+    echo libogg
+}
 
 ffbuild_enabled() {
-    return 0
+    return -1
 }
 
 ffbuild_dockerbuild() {
@@ -28,7 +33,7 @@ ffbuild_dockerbuild() {
 
     ./configure "${myconf[@]}"
     make -j$(nproc)
-    make install
+    make install DESTDIR="$FFBUILD_DESTDIR"
 }
 
 ffbuild_configure() {

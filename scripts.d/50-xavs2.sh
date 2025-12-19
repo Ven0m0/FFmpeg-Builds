@@ -8,7 +8,7 @@ ffbuild_enabled() {
     [[ $TARGET == win32 ]] && return -1
     # xavs2 aarch64 support is broken
     [[ $TARGET == *arm64 ]] && return -1
-    return 0
+    return -1
 }
 
 ffbuild_dockerdl() {
@@ -49,7 +49,7 @@ ffbuild_dockerbuild() {
 
     ./configure "${myconf[@]}"
     make -j$(nproc)
-    make install
+    make install DESTDIR="$FFBUILD_DESTDIR"
 }
 
 ffbuild_configure() {

@@ -1,16 +1,17 @@
 #!/bin/bash
 
 SCRIPT_REPO="https://github.com/xiph/rav1e.git"
-SCRIPT_COMMIT="a2f01b3e233f531c28a20b4c29fb5c9e5d29fa6d"
+SCRIPT_COMMIT="b7bf39066ec4f004c9b9cdb81c91734ec2edfac7"
 
 ffbuild_enabled() {
     [[ $TARGET == win32 ]] && return -1
-    return 0
+    return -1
 }
 
 ffbuild_dockerbuild() {
     local myconf=(
         --prefix="${FFBUILD_PREFIX}"
+        --destdir="${FFBUILD_DESTDIR}"
         --target="${FFBUILD_RUST_TARGET}"
         --library-type=staticlib
         --crt-static
@@ -38,7 +39,7 @@ ffbuild_dockerbuild() {
 
     cargo cinstall -v "${myconf[@]}"
 
-    chmod 644 "${FFBUILD_PREFIX}"/lib/*rav1e*
+    chmod 644 "${FFBUILD_DESTPREFIX}"/lib/*rav1e*
 }
 
 ffbuild_configure() {

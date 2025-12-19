@@ -1,7 +1,12 @@
 #!/bin/bash
 
 SCRIPT_REPO="https://github.com/GNOME/libxml2.git"
-SCRIPT_COMMIT="0c948334a8f5c66d50e9f8992e62998017dc4fc6"
+SCRIPT_COMMIT="22f9d730898d2dfcc03a484e65e1f8fc3675225f"
+
+ffbuild_depends() {
+    echo base
+    echo libiconv
+}
 
 ffbuild_enabled() {
     return 0
@@ -27,7 +32,7 @@ ffbuild_dockerbuild() {
 
     ./autogen.sh "${myconf[@]}"
     make -j$(nproc)
-    make install
+    make install DESTDIR="$FFBUILD_DESTDIR"
 }
 
 ffbuild_configure() {

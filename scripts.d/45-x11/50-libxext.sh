@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SCRIPT_REPO="https://gitlab.freedesktop.org/xorg/lib/libxext.git"
-SCRIPT_COMMIT="23eeaa46152fb91a0601571f989c0d625bfc9994"
+SCRIPT_COMMIT="5ce2a6127889834082147dbcdd47731b7986961b"
 
 ffbuild_enabled() {
     [[ $TARGET != linux* ]] && return -1
@@ -42,8 +42,8 @@ ffbuild_dockerbuild() {
 
     ./configure "${myconf[@]}"
     make -j$(nproc)
-    make install
+    make install DESTDIR="$FFBUILD_DESTDIR"
 
-    gen-implib "$FFBUILD_PREFIX"/lib/{libXext.so.6,libXext.a}
-    rm "$FFBUILD_PREFIX"/lib/libXext{.so*,.la}
+    gen-implib "$FFBUILD_DESTPREFIX"/lib/{libXext.so.6,libXext.a}
+    rm "$FFBUILD_DESTPREFIX"/lib/libXext{.so*,.la}
 }

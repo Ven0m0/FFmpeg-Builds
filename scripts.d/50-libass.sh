@@ -1,10 +1,17 @@
 #!/bin/bash
 
 SCRIPT_REPO="https://github.com/libass/libass.git"
-SCRIPT_COMMIT="26217e013000df94ff017b175834ab328ce1fa31"
+SCRIPT_COMMIT="e60dddb7db62cc009175843bdb0b0dfedceebedb"
+
+ffbuild_depends() {
+    echo base
+    echo fonts
+    echo fribidi
+    echo libiconv
+}
 
 ffbuild_enabled() {
-    return 0
+    return -1
 }
 
 ffbuild_dockerbuild() {
@@ -30,7 +37,7 @@ ffbuild_dockerbuild() {
 
     ./configure "${myconf[@]}"
     make -j$(nproc)
-    make install
+    make install DESTDIR="$FFBUILD_DESTDIR"
 }
 
 ffbuild_configure() {

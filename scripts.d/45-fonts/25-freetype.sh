@@ -1,10 +1,10 @@
 #!/bin/bash
 
 SCRIPT_REPO="https://gitlab.freedesktop.org/freetype/freetype.git"
-SCRIPT_COMMIT="b04db3872cfac5ee4fd4f895933cebce3576fbf0"
+SCRIPT_COMMIT="fc9cc5038e05edceec3d0f605415540ac76163e9"
 
 ffbuild_enabled() {
-    return 0
+    return 1
 }
 
 ffbuild_dockerbuild() {
@@ -28,5 +28,5 @@ ffbuild_dockerbuild() {
 
     ./configure "${myconf[@]}"
     make -j$(nproc)
-    make install
+    make install DESTDIR="$FFBUILD_DESTDIR"
 }

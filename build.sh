@@ -29,6 +29,7 @@ trap "rm -f -- '$BUILD_SCRIPT'" EXIT
 
 cat <<EOF >"$BUILD_SCRIPT"
     set -xe
+    shopt -s nullglob
     cd /ffbuild
     rm -rf ffmpeg prefix
 
@@ -62,6 +63,7 @@ docker run --rm -i $TTY_ARG "${UIDARGS[@]}" -v "$PWD/ffbuild":/ffbuild $PATCHES_
 if [[ -n "$FFBUILD_OUTPUT_DIR" ]]; then
     mkdir -p "$FFBUILD_OUTPUT_DIR"
     package_variant ffbuild/prefix "$FFBUILD_OUTPUT_DIR"
+    [[ -n "$LICENSE_FILE" ]] && cp "ffbuild/ffmpeg/$LICENSE_FILE" "$FFBUILD_OUTPUT_DIR/LICENSE.txt"
     rm -rf ffbuild
     exit 0
 fi
