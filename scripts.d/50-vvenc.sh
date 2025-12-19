@@ -2,7 +2,7 @@
 
 SCRIPT_REPO="https://github.com/fraunhoferhhi/vvenc.git"
 SCRIPT_COMMIT="45e89ef9f33294d13e7d8d3bef8fdac487e3f2f8"
-ffbuild_enabled() { return -1; }
+ffbuild_enabled() { return 1; }
 ffbuild_dockerbuild() {
     mkdir build && cd build
     local armsimd=()
