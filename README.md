@@ -1,8 +1,11 @@
-# FFmpeg Static Auto-Builds (Fork with SVT-AV1-Essential) 
+# FFmpeg Static Auto-Builds (Fork with SVT-AV1-HDR)
 
-Static Windows (x86_64) and Linux (x86_64) Builds of ffmpeg master and latest release branch, featuring SVT-AV1-Essential.
+Static Windows (x86_64, ARM64) and Linux (x86_64, ARM64) Builds of ffmpeg master and latest release branches, featuring SVT-AV1-HDR support.
 
-**Note**: The builds provided are only meant to be used with yt-dlp and any unrelated issues/patches will be rejected
+This fork combines the best features from:
+- [QuickFatHedgehog/FFmpeg-Builds-SVT-AV1-HDR](https://github.com/QuickFatHedgehog/FFmpeg-Builds-SVT-AV1-HDR) - SVT-AV1-HDR support
+- [aandrew-me/FFmpeg-Builds-Custom](https://github.com/aandrew-me/FFmpeg-Builds-Custom) - Custom build optimizations
+- [nekotrix/FFmpeg-Builds-SVT-AV1-Essential](https://github.com/nekotrix/FFmpeg-Builds-SVT-AV1-Essential) - Base build system
 
 ## Downloads
 
@@ -16,7 +19,15 @@ Static Windows (x86_64) and Linux (x86_64) Builds of ffmpeg master and latest re
 
 ---
 
-**Auto-Builds run ONLY for win64 and linux64. There are no win32/x86 auto-builds, though you can produce win32 builds yourself following the instructions below.**
+## Features
+
+✅ **SVT-AV1-HDR Support** - High Dynamic Range encoding with SVT-AV1
+✅ **FFmpeg 8.0** - Latest FFmpeg release branch support
+✅ **ARM64 Support** - Native builds for Windows ARM64 and Linux ARM64
+✅ **Multiple FFmpeg Versions** - Support for FFmpeg 4.4, 5.0, 5.1, 6.0, 6.1, 7.0, 7.1, and 8.0
+✅ **Shared and Static Builds** - Both GPL and GPL-shared variants available
+
+**Auto-Builds run for win64, winarm64, linux64, and linuxarm64 targets.**
 
 ### 1. More Builds
 
