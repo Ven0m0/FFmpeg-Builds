@@ -1,8 +1,11 @@
 import os
+import sys
 import subprocess
 import re
 import glob
+from pathlib import Path
 import tempfile
+import shutil
 import concurrent.futures
 
 def run_command(cmd, cwd=None):
@@ -37,15 +40,12 @@ def update_script(script_path):
         content = f.read()
     
     # Extract variables from the script
-    # Use regex to match only shell variable assignments (not conditionals like if [ "$a" = "$b" ])
     script_vars = {}
     for line in content.splitlines():
-        # Match lines that start with optional whitespace, then a variable name, then =
-        match = re.match(r'^\s*([A-Z_][A-Z0-9_]*)\s*=\s*(.*)$', line)
-        if match:
-            key, value = match.groups()
-            script_vars[key] = value.strip().strip('"\'')
-
+        if '=' in line:
+            key, value = line.split('=', 1)
+            script_vars[key.strip()] = value.strip().strip('"\'')
+    
     if script_vars.get('SCRIPT_SKIP'):
         return
     
@@ -123,17 +123,7 @@ def update_script(script_path):
                       '--sort=v:refname', repo, f'refs/tags/{current_tagfilter}']
                 output = run_command(cmd)
                 if output:
-                    # Extract commit hash (first field), not tag name
-                    new_commit = output.splitlines()[-1].split()[0]
-
-                    if new_commit != current_commit:
-                        print(f"Updating {script_path}")
-                        content = re.sub(
-                            f'{commit_var}=.*',
-                            f'{commit_var}="{new_commit}"',
-                            content,
-                            flags=re.MULTILINE
-                        )
+                    new_commit = output.splitlines()[-1].split('/')[2].strip()
             else:
                 if not current_branch:
                     current_branch = get_git_default_branch(repo)
