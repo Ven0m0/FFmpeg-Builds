@@ -1,13 +1,12 @@
 #!/bin/bash
 
-SCRIPT_REPO="https://github.com/nekotrix/SVT-AV1-Essential.git"
-SCRIPT_COMMIT="e9d30d710497a6757180cc3ae64d32550a298305"
-SCRIPT_BRANCH="Essential-v3.1.2"
+SCRIPT_REPO="https://github.com/juliobbv-p/svt-av1-hdr.git"
+SCRIPT_COMMIT="e0c97bb0b8c723ca397660966314f3e1d44b3203"
 
 ffbuild_enabled() {
     [[ $TARGET == win32 ]] && return -1
     (( $(ffbuild_ffver) > 700 )) || return -1
-    return -1
+    return 0
 }
 
 ffbuild_dockerdl() {
