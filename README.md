@@ -1,11 +1,11 @@
-# FFmpeg Static Auto-Builds (Fork with SVT-AV1-HDR)
+# FFmpeg Static Auto-Builds (Fork with SVT-AV1-Essential)
 
-Static Windows (x86_64, ARM64) and Linux (x86_64, ARM64) Builds of ffmpeg master and latest release branches, featuring SVT-AV1-HDR support.
+Static Windows (x86_64, ARM64) and Linux (x86_64, ARM64) Builds of ffmpeg master and latest release branches, featuring SVT-AV1-Essential support.
 
-This fork combines the best features from:
-- [QuickFatHedgehog/FFmpeg-Builds-SVT-AV1-HDR](https://github.com/QuickFatHedgehog/FFmpeg-Builds-SVT-AV1-HDR) - SVT-AV1-HDR support
-- [aandrew-me/FFmpeg-Builds-Custom](https://github.com/aandrew-me/FFmpeg-Builds-Custom) - Custom build optimizations
-- [nekotrix/FFmpeg-Builds-SVT-AV1-Essential](https://github.com/nekotrix/FFmpeg-Builds-SVT-AV1-Essential) - Base build system
+This fork integrates the best features from:
+- [nekotrix/FFmpeg-Builds-SVT-AV1-Essential](https://github.com/nekotrix/FFmpeg-Builds-SVT-AV1-Essential) - SVT-AV1-Essential codec with optimized quality defaults
+- [QuickFatHedgehog/FFmpeg-Builds-SVT-AV1-HDR](https://github.com/QuickFatHedgehog/FFmpeg-Builds-SVT-AV1-HDR) - x265 HDR10+ support
+- [aandrew-me/FFmpeg-Builds-Custom](https://github.com/aandrew-me/FFmpeg-Builds-Custom) - Build system enhancements
 
 ## Downloads
 
@@ -21,7 +21,8 @@ This fork combines the best features from:
 
 ## Features
 
-✅ **SVT-AV1-HDR Support** - High Dynamic Range encoding with SVT-AV1
+✅ **SVT-AV1-Essential** - Quality-optimized AV1 encoder with enhanced defaults (forced 10-bit, improved scene detection, auto-tiling)
+✅ **x265 HDR10+ Support** - High Dynamic Range encoding for HEVC with 10-bit and 12-bit profiles
 ✅ **FFmpeg 8.0** - Latest FFmpeg release branch support
 ✅ **ARM64 Support** - Native builds for Windows ARM64 and Linux ARM64
 ✅ **Multiple FFmpeg Versions** - Support for FFmpeg 4.4, 5.0, 5.1, 6.0, 6.1, 7.0, 7.1, and 8.0
