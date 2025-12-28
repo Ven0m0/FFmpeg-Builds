@@ -35,5 +35,5 @@ RUN --mount=src=.,dst=/input \
 
 ENV HOST_CC="gcc" \
     HOST_CXX="g++" \
-    HOST_CFLAGS="-O2 -pipe" \
-    HOST_CXXFLAGS="-O2 -pipe"
+    HOST_CFLAGS="-O3 -pipe" \
+    HOST_CXXFLAGS="-O3 -pipe"
