@@ -1,10 +1,10 @@
 #!/bin/bash
 
 SCRIPT_REPO="https://github.com/lv2/lv2.git"
-SCRIPT_COMMIT="7cb031f12795a3f4a62428322e30a7ce60358a5c"
+SCRIPT_COMMIT="ad458dbffa7429a3c57310e3774730880a855620"
 
 ffbuild_enabled() {
-    return -1
+    return 0
 }
 
 ffbuild_dockerbuild() {
@@ -15,7 +15,6 @@ ffbuild_dockerbuild() {
         --buildtype=release
         --default-library=static
         -Ddocs=disabled
-        -Dplugins=disabled
         -Dtests=disabled
         -Donline_docs=false
     )

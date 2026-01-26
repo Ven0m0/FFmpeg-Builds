@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SCRIPT_REPO="https://github.com/ggml-org/whisper.cpp.git"
-SCRIPT_COMMIT="d9b7613b34a343848af572cc14467fc5e82fc788"
+SCRIPT_COMMIT="6114e692136bea917dc88a5eb2e532c3d133d963"
 
 ffbuild_depends() {
     echo base
@@ -9,7 +9,11 @@ ffbuild_depends() {
     echo opencl
 }
 
-ffbuild_enabled() { return 1; }
+ffbuild_enabled() {
+    [[ $TARGET != *32 ]] || return -1
+    (( $(ffbuild_ffver) >= 800 )) || return -1
+    return 0
+}
 
 ffbuild_dockerbuild() {
     mkdir build && cd build
@@ -39,6 +43,5 @@ ffbuild_configure() {
 }
 
 ffbuild_unconfigure() {
-    (( $(ffbuild_ffver) >= 800 )) || return 0
     echo --disable-whisper
 }

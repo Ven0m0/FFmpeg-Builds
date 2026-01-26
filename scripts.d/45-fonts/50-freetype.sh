@@ -1,10 +1,10 @@
 #!/bin/bash
 
 SCRIPT_REPO="https://gitlab.freedesktop.org/freetype/freetype.git"
-SCRIPT_COMMIT="fc9cc5038e05edceec3d0f605415540ac76163e9"
+SCRIPT_COMMIT="23b6cd27ff19b70cbf98e058cd2cf0647d5284ff"
 
 ffbuild_enabled() {
-    return -1
+    return 0
 }
 
 ffbuild_dockerbuild() {

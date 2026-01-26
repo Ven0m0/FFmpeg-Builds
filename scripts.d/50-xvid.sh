@@ -5,7 +5,7 @@ SCRIPT_REV="2202"
 
 ffbuild_enabled() {
     [[ $VARIANT == lgpl* ]] && return -1
-    return -1
+    return 0
 }
 
 ffbuild_dockerdl() {

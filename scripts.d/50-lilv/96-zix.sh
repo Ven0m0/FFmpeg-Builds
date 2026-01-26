@@ -1,10 +1,10 @@
 #!/bin/bash
 
 SCRIPT_REPO="https://github.com/drobilla/zix.git"
-SCRIPT_COMMIT="dfa757a80c51e50deb375fd4f1d05948c95dfe0f"
+SCRIPT_COMMIT="55c448c024f14b96f1412592b96905575d382b95"
 
 ffbuild_enabled() {
-    return -1
+    return 0
 }
 
 ffbuild_dockerbuild() {

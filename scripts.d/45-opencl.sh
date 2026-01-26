@@ -7,7 +7,7 @@ SCRIPT_REPO2="https://github.com/KhronosGroup/OpenCL-ICD-Loader.git"
 SCRIPT_COMMIT2="634ef470035f3fadf46ee48fa91886f155f788f5"
 
 ffbuild_enabled() {
-    return -1
+    return 0
 }
 
 ffbuild_dockerdl() {

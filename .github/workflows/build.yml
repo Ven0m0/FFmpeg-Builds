@@ -1,6 +1,10 @@
 name: Build FFmpeg
 
 on:
+  push:
+    paths-ignore:
+      - '**.md'
+      - 'LICENSE'
   workflow_dispatch:
     inputs:
       doRelease:
@@ -14,7 +18,7 @@ on:
         default: false
         required: false
   schedule:
-    - cron: '0 1 * * *'
+    - cron: '0 12 * * *'
 
 env:
   DOCKER_BUILDKIT: 1
@@ -129,7 +133,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [win64,winarm64,linux64,linuxarm64]
+        target: [win32,win64,winarm64,linux32,linux64,linuxarm64]
     steps:
       - name: Free Disk-Space
         run: df -h && sudo apt-get clean && docker system prune -a -f && sudo rm -rf /opt/ghc /usr/local/.ghcup /usr/local/lib/android && df -h
@@ -186,7 +190,7 @@ jobs:
       fail-fast: false
       matrix:
         target: [win64,winarm64,linux64,linuxarm64]
-        variant: [gpl,gpl 8.0,gpl-shared,gpl-shared 8.0]
+        variant: [gpl,lgpl,gpl 8.0,gpl 7.1,lgpl 8.0,lgpl 7.1,gpl-shared,lgpl-shared,gpl-shared 8.0,gpl-shared 7.1,lgpl-shared 8.0,lgpl-shared 7.1]
         include:
           - target: win64
             variant: gpl 7.0
@@ -200,6 +204,8 @@ jobs:
             variant: gpl 5.0
           - target: win64
             variant: gpl 4.4
+          - target: win64
+            variant: gpl 4.3
     steps:
       - name: Free Disk-Space
         run: df -h && sudo apt-get clean && docker system prune -a -f && sudo rm -rf /opt/ghc /usr/local/.ghcup /usr/local/lib/android && df -h
@@ -265,7 +271,7 @@ jobs:
       fail-fast: false
       matrix:
         target: [win64,winarm64,linux64,linuxarm64]
-        variant: [gpl,gpl 8.0,gpl-shared,gpl-shared 8.0]
+        variant: [gpl,lgpl,gpl 8.0,gpl 7.1,lgpl 8.0,lgpl 7.1,gpl-shared,lgpl-shared,gpl-shared 8.0,gpl-shared 7.1,lgpl-shared 8.0,lgpl-shared 7.1]
     steps:
       - name: Free Disk-Space
         run: df -h && sudo apt-get clean && docker system prune -a -f && sudo rm -rf /opt/ghc /usr/local/.ghcup /usr/local/lib/android && df -h
@@ -314,8 +320,8 @@ jobs:
           set -xe
           shopt -s nullglob
           RELDATE="$(date +'%Y-%m-%d %H:%M')"
-          NAME="FFMPEG $RELDATE"
-          TAGNAME="build-$(date +'%Y-%m-%d-%H-%M')"
+          NAME="Auto-Build $RELDATE"
+          TAGNAME="autobuild-$(date +'%Y-%m-%d-%H-%M')"
           (cd artifacts && sha256sum *.{zip,tar.xz} > checksums.sha256)
           gh release create "$TAGNAME" --target "master" --title "$NAME" artifacts/*.{zip,tar.xz} artifacts/checksums.*
           echo "tag_name=${TAGNAME}" >> $GITHUB_OUTPUT
@@ -329,11 +335,15 @@ jobs:
           mkdir latest_artifacts
           ./util/repack_latest.sh latest_artifacts artifacts/*.{zip,tar.xz}
           (cd latest_artifacts && sha256sum *.{zip,tar.xz} > checksums.sha256)
-          NAME="FFmpeg (${{ steps.create_release.outputs.rel_date }})"
+          NAME="Latest Auto-Build (${{ steps.create_release.outputs.rel_date }})"
           TAGNAME="latest"
           gh release delete --cleanup-tag --yes "$TAGNAME" || true
           sleep 15
           gh release create "$TAGNAME" --target "master" --title "$NAME" latest_artifacts/*
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+      - name: Update Wiki
+        run: ./util/update_wiki.sh artifacts ${{ steps.create_release.outputs.tag_name }}
         env:
           GITHUB_TOKEN: ${{ github.token }}
       - name: Prune old releases

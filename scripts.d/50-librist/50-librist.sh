@@ -4,7 +4,8 @@ SCRIPT_REPO="https://code.videolan.org/rist/librist.git"
 SCRIPT_COMMIT="1a5013b59ce098465e835a0510cd395872bb1c24"
 
 ffbuild_enabled() {
-    return -1
+    (( $(ffbuild_ffver) >= 404 )) || return -1
+    return 0
 }
 
 ffbuild_dockerbuild() {

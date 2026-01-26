@@ -4,7 +4,7 @@ SCRIPT_REPO="https://github.com/drobilla/sord.git"
 SCRIPT_COMMIT="e3419b6a9a481505134fbae0374e462f4953ee9c"
 
 ffbuild_enabled() {
-    return -1
+    return 0
 }
 
 ffbuild_dockerbuild() {
