@@ -33,8 +33,7 @@ resolvescript() {
 
 to_df() {
     local _of="${TODF:-Dockerfile}"
-    printf "$@" >> "$_of"
-    echo >> "$_of"
+    printf "%s\n" "$*" >> "$_of"
 }
 
 ###
@@ -135,7 +134,7 @@ export TODF="Dockerfile"
 
 BASELAYER="base-layer"
 to_df "FROM ${REGISTRY}/${REPO}/base-${TARGET}:latest AS ${BASELAYER}"
-to_df "ENV TARGET=$TARGET VARIANT=$VARIANT REPO=$REPO ADDINS_STR=$ADDINS_STR"
+to_df "ENV TARGET=$TARGET VARIANT=$VARIANT REPO=$REPO ADDINS_STR=$ADDINS_STR FFVER=$(ffbuild_ffver)"
 to_df "COPY --link util/run_stage.sh /usr/bin/run_stage"
 
 for addin in "${ADDINS[@]}"; do

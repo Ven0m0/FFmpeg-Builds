@@ -1,10 +1,10 @@
 #!/bin/bash
 
 SCRIPT_REPO="https://github.com/harfbuzz/harfbuzz.git"
-SCRIPT_COMMIT="80311aa92390ae9b5a782568302e531d378b6b01"
+SCRIPT_COMMIT="e3d0aeab7a0657e99667291ae6f75bab3455244f"
 
 ffbuild_enabled() {
-    return -1
+    return 0
 }
 
 ffbuild_dockerbuild() {
@@ -41,11 +41,9 @@ ffbuild_dockerbuild() {
 }
 
 ffbuild_configure() {
-    (( $(ffbuild_ffver) > 600 )) || return 0
     echo --enable-libharfbuzz
 }
 
 ffbuild_unconfigure() {
-    (( $(ffbuild_ffver) > 600 )) || return 0
     echo --disable-libharfbuzz
 }

@@ -30,7 +30,7 @@ while [[ "$#" -gt 0 ]]; do
     shift
 done
 
-REPO="${GITHUB_REPOSITORY:-yt-dlp/ffmpeg-builds}"
+REPO="${GITHUB_REPOSITORY:-btbn/ffmpeg-builds}"
 REPO="${REPO,,}"
 REGISTRY="${REGISTRY_OVERRIDE:-ghcr.io}"
 BASE_IMAGE="${REGISTRY}/${REPO}/base:latest"
@@ -39,6 +39,9 @@ IMAGE="${REGISTRY}/${REPO}/${TARGET}-${VARIANT}${ADDINS_STR:+-}${ADDINS_STR}:lat
 
 ffbuild_ffver() {
     case "$ADDINS_STR" in
+    *4.3*)
+        echo 403
+        ;;
     *4.4*)
         echo 404
         ;;

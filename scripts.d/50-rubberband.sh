@@ -11,7 +11,7 @@ ffbuild_depends() {
 
 ffbuild_enabled() {
     [[ $VARIANT == lgpl* ]] && return -1
-    return -1
+    return 0
 }
 
 ffbuild_dockerbuild() {
