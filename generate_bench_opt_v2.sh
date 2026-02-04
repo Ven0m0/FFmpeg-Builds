@@ -5,7 +5,6 @@ cd "$(dirname "$0")"
 source util/vars.sh
 export LC_ALL=C.UTF-8
 declare -A CACHE_STAGEDEPS
-declare -a __GFDI_ACC
 rm -f Dockerfile Dockerfile.{dl,final,dl.final}
 layername() {
     printf "layer-"
@@ -27,11 +26,11 @@ resolvescript() {
         echo "$STAGE"
     fi
 }
-to_df() {
+to_df() { return 0;
     local _of="${TODF:-Dockerfile}"
     printf "%s\n" "$*" >> "$_of"
 }
-exec_dockerstage() {
+exec_dockerstage() { return 0;
     SCRIPT="$1"
     (
         SELF="$SCRIPT"
@@ -92,9 +91,7 @@ get_stagedeps_recursive_internal() {
     for CDEP in "${CDEPS[@]}"; do
         get_stagedeps_recursive_internal "$CDEP"
     done
-    if [[ ${#CDEPS[@]} -gt 0 ]]; then
-        printf "%s\n" "${CDEPS[@]}"
-    fi
+    printf "%s\n" "${CDEPS[@]}"
 }
 get_stagedeps_recursive() {
     declare -A ALREADY_PRINTED
@@ -107,6 +104,7 @@ get_stagedeps_recursive() {
 }
 get_filled_deps_impl() {
     local TARGET="$1"
+    local -n _GFDI_OUT="$2"
     local CUR_DEPS=()
     get_stagedeps_impl "$TARGET" CUR_DEPS
     local UNFILLED_DEPS=()
@@ -114,17 +112,17 @@ get_filled_deps_impl() {
         [[ -v FILLED_DEPS["$DEP"] ]] || UNFILLED_DEPS+=("$DEP")
     done
     if [[ "${#UNFILLED_DEPS[@]}" -eq 0 ]]; then
-        __GFDI_ACC+=("$TARGET")
+        _GFDI_OUT+=("$TARGET")
     else
         for DEP in "${UNFILLED_DEPS[@]}"; do
-            get_filled_deps_impl "$DEP"
+            get_filled_deps_impl "$DEP" _GFDI_OUT
         done
     fi
 }
 get_filled_deps() {
-    __GFDI_ACC=()
-    get_filled_deps_impl "$1"
-    tr " " "\n" <<< "${__GFDI_ACC[@]}" | sort -u
+    local RES=()
+    get_filled_deps_impl "$1" RES
+    tr " " "\n" <<< "${RES[@]}" | sort -u
 }
 get_output() {
     (
