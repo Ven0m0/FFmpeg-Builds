@@ -27,11 +27,11 @@ resolvescript() {
         echo "$STAGE"
     fi
 }
-to_df() { return 0;
+to_df() {
     local _of="${TODF:-Dockerfile}"
     printf "%s\n" "$*" >> "$_of"
 }
-exec_dockerstage() { return 0;
+exec_dockerstage() {
     SCRIPT="$1"
     (
         SELF="$SCRIPT"
