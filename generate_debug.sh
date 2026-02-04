@@ -68,6 +68,7 @@ get_stagedeps_impl() {
     else
         [[ -f "$TARGET" ]] && SCRIPT=("$TARGET") || SCRIPT=(scripts.d/??-"${TARGET}.sh")
         SCRIPT="${SCRIPT[0]}"
+echo "DEBUG SCRIPT: $SCRIPT" >&2
         local RES
         RES="$(
             SELF="$SCRIPT"
@@ -77,12 +78,14 @@ get_stagedeps_impl() {
             ffbuild_enabled || exit 0
             ffbuild_depends
         )"
+echo "DEBUG RES: $RES" >&2
         NEW_DEPS=($RES)
     fi
     CACHE_STAGEDEPS["$TARGET"]="${NEW_DEPS[*]}"
     _GSI_RET=("${NEW_DEPS[@]}")
 }
 get_stagedeps() {
+echo "DEBUG SCRIPT: $SCRIPT" >&2
     local RES=()
     get_stagedeps_impl "$1" RES
     echo "${RES[*]}"
@@ -92,9 +95,7 @@ get_stagedeps_recursive_internal() {
     for CDEP in "${CDEPS[@]}"; do
         get_stagedeps_recursive_internal "$CDEP"
     done
-    if [[ ${#CDEPS[@]} -gt 0 ]]; then
-        printf "%s\n" "${CDEPS[@]}"
-    fi
+    printf "%s\n" "${CDEPS[@]}"
 }
 get_stagedeps_recursive() {
     declare -A ALREADY_PRINTED
@@ -184,7 +185,7 @@ while true; do
         fi
     done
 done
-source "variants/${TARGET}-${VARIANT}.sh"
+exit 0 #
 for addin in ${ADDINS[*]}; do
     source "addins/${addin}.sh"
 done

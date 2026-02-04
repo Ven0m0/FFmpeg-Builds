@@ -92,9 +92,7 @@ get_stagedeps_recursive_internal() {
     for CDEP in "${CDEPS[@]}"; do
         get_stagedeps_recursive_internal "$CDEP"
     done
-    if [[ ${#CDEPS[@]} -gt 0 ]]; then
-        printf "%s\n" "${CDEPS[@]}"
-    fi
+    printf "%s\n" "${CDEPS[@]}"
 }
 get_stagedeps_recursive() {
     declare -A ALREADY_PRINTED
