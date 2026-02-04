@@ -48,10 +48,12 @@ exec_dockerstage() { return 0;
     )
 }
 get_stagedeps_impl() {
-    local TARGET="$1"; echo "Visiting $TARGET" >local TARGET="$1"2
+    local TARGET="$1"
+    echo "Visiting $TARGET" >&2
     local -n _RET="$2"
     _RET=()
-    if [[ -v CACHE_STAGEDEPS["$TARGET"] ]]; then echo "Cache hit $TARGET" >if [[ -v CACHE_STAGEDEPS["$TARGET"] ]]; then2;
+    if [[ -v CACHE_STAGEDEPS["$TARGET"] ]]; then
+        echo "Cache hit $TARGET" >&2
         read -ra _RET <<< "${CACHE_STAGEDEPS["$TARGET"]}"
         return
     fi
