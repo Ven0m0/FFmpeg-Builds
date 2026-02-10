@@ -7,6 +7,11 @@ from pathlib import Path
 import tempfile
 import shutil
 import concurrent.futures
+import threading
+
+_git_default_branch_cache = {}
+_git_loading_events = {}
+_git_cache_lock = threading.Lock()
 
 def run_command(cmd, cwd=None):
     try:
@@ -23,15 +28,45 @@ def run_command(cmd, cwd=None):
         return None
 
 def get_git_default_branch(repo_url):
+    with _git_cache_lock:
+        if repo_url in _git_default_branch_cache:
+            return _git_default_branch_cache[repo_url]
+
+        if repo_url in _git_loading_events:
+            event = _git_loading_events[repo_url]
+            should_load = False
+        else:
+            event = threading.Event()
+            _git_loading_events[repo_url] = event
+            should_load = True
+
+    if not should_load:
+        event.wait()
+        with _git_cache_lock:
+            return _git_default_branch_cache.get(repo_url)
+
     try:
         output = run_command(['git', 'remote', 'show', repo_url])
+        branch = None
         if output:
             for line in output.splitlines():
                 if "HEAD branch:" in line:
-                    return line.split(":", 1)[1].strip()
+                    branch = line.split(":", 1)[1].strip()
+                    break
+
+        with _git_cache_lock:
+            if branch:
+                _git_default_branch_cache[repo_url] = branch
+            del _git_loading_events[repo_url]
+        event.set()
+        return branch
     except Exception as e:
         print(f"Error getting default branch: {e}")
-    return None
+        with _git_cache_lock:
+            if repo_url in _git_loading_events:
+                del _git_loading_events[repo_url]
+        event.set()
+        return None
 
 def update_script(script_path):
     print(f"Processing {script_path}")
