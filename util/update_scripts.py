@@ -46,7 +46,7 @@ def get_git_default_branch(repo_url):
             return _git_default_branch_cache.get(repo_url)
 
     try:
-        output = run_command(['git', 'remote', 'show', repo_url])
+        output = run_command(['git', 'remote', 'show', '--', repo_url])
         branch = None
         if output:
             for line in output.splitlines():
