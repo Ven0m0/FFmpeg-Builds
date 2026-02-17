@@ -41,7 +41,7 @@ def update_script(script_path):
     
     # Extract variables from the script
     script_vars = {}
-    for match in re.finditer(r"^(.*?)=(.*)$", content, re.MULTILINE):
+    for match in re.finditer(r"^([^=]*)=(.*)$", content, re.MULTILINE):
         key = match.group(1)
         value = match.group(2)
         script_vars[key.strip()] = value.strip().strip('"\'')
