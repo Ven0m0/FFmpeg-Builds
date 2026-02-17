@@ -38,6 +38,7 @@ def update_script(script_path):
     
     with open(script_path, 'r') as f:
         content = f.read()
+    original_content = content
     
     # Extract variables from the script
     script_vars = {}
@@ -152,8 +153,9 @@ def update_script(script_path):
             print("Unknown layout. Needs manual check.")
             break
     
-    with open(script_path, 'w') as f:
-        f.write(content)
+    if content != original_content:
+        with open(script_path, 'w') as f:
+            f.write(content)
     print()
 
 def main():
