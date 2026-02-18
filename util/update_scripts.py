@@ -73,13 +73,14 @@ def update_script(script_path):
     
     with open(script_path, 'r') as f:
         content = f.read()
+    original_content = content
     
     # Extract variables from the script
     script_vars = {}
-    for line in content.splitlines():
-        if '=' in line:
-            key, value = line.split('=', 1)
-            script_vars[key.strip()] = value.strip().strip('"\'')
+    for match in re.finditer(r"^([^=]*)=(.*)$", content, re.MULTILINE):
+        key = match.group(1)
+        value = match.group(2)
+        script_vars[key.strip()] = value.strip().strip('"\'')
     
     if script_vars.get('SCRIPT_SKIP'):
         return
@@ -187,8 +188,9 @@ def update_script(script_path):
             print("Unknown layout. Needs manual check.")
             break
     
-    with open(script_path, 'w') as f:
-        f.write(content)
+    if content != original_content:
+        with open(script_path, 'w') as f:
+            f.write(content)
     print()
 
 def main():
