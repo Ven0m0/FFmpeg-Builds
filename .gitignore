@@ -5,3 +5,4 @@
 /ffbuild/
 /artifacts/
 /.cache/
+__pycache__/
