@@ -70,6 +70,7 @@ def get_git_default_branch(repo_url):
 
 def update_script(script_path):
     print(f"Processing {script_path}")
+    issues = []
     
     with open(script_path, 'r') as f:
         content = f.read()
@@ -83,7 +84,7 @@ def update_script(script_path):
         script_vars[key.strip()] = value.strip().strip('"\'')
     
     if script_vars.get('SCRIPT_SKIP'):
-        return
+        return None
     
     for i in [''] + list(range(2, 10)):
         suffix = str(i) if i else ''
@@ -97,9 +98,7 @@ def update_script(script_path):
         repo = script_vars.get(repo_var)
         if not repo:
             if not suffix:  # First iteration with no suffix
-                with open(script_path, 'a') as f:
-                    f.write("\nxxx_CHECKME_xxx\n")
-                print("Needs manual check.")
+                issues.append(f"{script_path}: Needs manual check (missing repo)")
             break
         
         current_commit = script_vars.get(commit_var)
@@ -186,15 +185,14 @@ def update_script(script_path):
         
         else:
             # Unknown repository type
-            with open(script_path, 'a') as f:
-                f.write("\nxxx_CHECKME_UNKNOWN_xxx\n")
-            print("Unknown layout. Needs manual check.")
+            issues.append(f"{script_path}: Unknown layout (unknown repo type)")
             break
     
     if content != original_content:
         with open(script_path, 'w') as f:
             f.write(content)
     print()
+    return issues
 
 def main():
     # Change to the parent directory of the script
@@ -202,8 +200,17 @@ def main():
 
     script_files = glob.glob('scripts.d/**/*.sh', recursive=True)
     
+    all_issues = []
     with concurrent.futures.ThreadPoolExecutor(max_workers=os.cpu_count() * 4) as executor:
-        executor.map(update_script, script_files)
+        results = executor.map(update_script, script_files)
+        for res in results:
+            if res:
+                all_issues.extend(res)
+
+    if all_issues:
+        print("\n--- Issues Found ---")
+        for issue in all_issues:
+            print(issue)
 
 if __name__ == '__main__':
     main()
