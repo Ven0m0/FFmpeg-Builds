@@ -6,3 +6,6 @@
 /artifacts/
 /.cache/
 __pycache__/
+*.log
+/if
+/local

@@ -5,7 +5,6 @@ cd "$(dirname "$0")"
 source util/vars.sh
 export LC_ALL=C.UTF-8
 declare -A CACHE_STAGEDEPS
-declare -a __GFDI_ACC
 rm -f Dockerfile Dockerfile.{dl,final,dl.final}
 layername() {
     printf "layer-"
@@ -107,6 +106,7 @@ get_stagedeps_recursive() {
 }
 get_filled_deps_impl() {
     local TARGET="$1"
+    local -n _OUT_REF="$2"
     local CUR_DEPS=()
     get_stagedeps_impl "$TARGET" CUR_DEPS
     local UNFILLED_DEPS=()
@@ -114,17 +114,17 @@ get_filled_deps_impl() {
         [[ -v FILLED_DEPS["$DEP"] ]] || UNFILLED_DEPS+=("$DEP")
     done
     if [[ "${#UNFILLED_DEPS[@]}" -eq 0 ]]; then
-        __GFDI_ACC+=("$TARGET")
+        _OUT_REF+=("$TARGET")
     else
         for DEP in "${UNFILLED_DEPS[@]}"; do
-            get_filled_deps_impl "$DEP"
+            get_filled_deps_impl "$DEP" "$2"
         done
     fi
 }
 get_filled_deps() {
-    __GFDI_ACC=()
-    get_filled_deps_impl "$1"
-    tr " " "\n" <<< "${__GFDI_ACC[@]}" | sort -u
+    local RES=()
+    get_filled_deps_impl "$1" RES
+    tr " " "\n" <<< "${RES[@]}" | sort -u
 }
 get_output() {
     (
