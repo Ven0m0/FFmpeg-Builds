@@ -154,12 +154,15 @@ def update_script(script_path):
         
         # Git Repository
         elif current_commit:
+            new_commit = None
             if current_tagfilter:
-                cmd = ['git', 'ls-remote', '--exit-code', '--tags', '--refs',
-                      '--sort=v:refname', repo, f'refs/tags/{current_tagfilter}']
+                cmd = ['git', '-c', 'versionsort.suffix=-', 'ls-remote', '--exit-code',
+                       '--tags', '--refs', '--sort=v:refname', repo,
+                       f'refs/tags/{current_tagfilter}']
                 output = run_command(cmd)
                 if output:
-                    new_commit = output.splitlines()[-1].split('/')[2].strip()
+                    ref = output.splitlines()[-1].split('\t')[1]
+                    new_commit = '/'.join(ref.split('/')[2:]).strip()
             else:
                 if not current_branch:
                     current_branch = get_git_default_branch(repo)
@@ -171,15 +174,15 @@ def update_script(script_path):
                     output = run_command(cmd)
                     if output:
                         new_commit = output.split()[0]
-                        
-                        if new_commit != current_commit:
-                            print(f"Updating {script_path}")
-                            content = re.sub(
-                                f'{commit_var}=.*',
-                                f'{commit_var}="{new_commit}"',
-                                content,
-                                flags=re.MULTILINE
-                            )
+            
+            if new_commit is not None and new_commit != current_commit:
+                print(f"Updating {script_path}")
+                content = re.sub(
+                    f'{commit_var}=.*',
+                    f'{commit_var}="{new_commit}"',
+                    content,
+                    flags=re.MULTILINE
+                )
         
         else:
             # Unknown repository type
