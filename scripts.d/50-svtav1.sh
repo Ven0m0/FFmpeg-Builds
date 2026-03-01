@@ -1,8 +1,7 @@
 #!/bin/bash
 
-SCRIPT_REPO="https://github.com/nekotrix/SVT-AV1-Essential.git"
-SCRIPT_COMMIT="50bf4a650eba2c20dcdbba9ad5c3884a7c720208"
-SCRIPT_BRANCH="Essential-v3.1.2"
+SCRIPT_REPO="https://gitlab.com/AOMediaCodec/SVT-AV1.git"
+SCRIPT_COMMIT="4ae9272b588a05ee6e77a43e8dfdac05f54c4ff0"
 
 ffbuild_enabled() {
     [[ $TARGET == win32 ]] && return -1
@@ -28,5 +27,6 @@ ffbuild_configure() {
 }
 
 ffbuild_unconfigure() {
+    (( $(ffbuild_ffver) >= 404 )) || return 0
     echo --disable-libsvtav1
 }

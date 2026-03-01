@@ -42,5 +42,6 @@ ffbuild_configure() {
 }
 
 ffbuild_unconfigure() {
+    (( $(ffbuild_ffver) >= 700 )) || return 0
     echo --disable-libdvdnav
 }

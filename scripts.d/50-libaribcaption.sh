@@ -33,5 +33,6 @@ ffbuild_configure() {
 }
 
 ffbuild_unconfigure() {
+    (( $(ffbuild_ffver) > 600 )) || return 0
     echo --disable-libaribcaption
 }
