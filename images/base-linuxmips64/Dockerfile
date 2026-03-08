@@ -40,7 +40,7 @@ RUN \
     rustup default nightly && \
     rustup +nightly component add rust-src && \
     echo "[unstable]\nbuild-std = [\"core\", \"alloc\", \"std\", \"proc_macro\"]\n" > "$CARGO_HOME"/config.toml && \
-    echo "[target.$FFBUILD_RUST_TARGET]\nlinker = \"${FFBUILD_TOOLCHAIN}-gcc\"\nar = \"${FFBUILD_TOOLCHAIN}-gcc-ar\"\n" > "$CARGO_HOME"/config.toml
+    echo "[target.$FFBUILD_RUST_TARGET]\nlinker = \"${FFBUILD_TOOLCHAIN}-gcc\"\nar = \"${FFBUILD_TOOLCHAIN}-gcc-ar\"\n" >> "$CARGO_HOME"/config.toml
 
 ADD toolchain.cmake /toolchain.cmake
 ADD cross.meson /cross.meson
