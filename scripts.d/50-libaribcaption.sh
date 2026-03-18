@@ -29,7 +29,7 @@ ffbuild_dockerbuild() {
     ninja -j$(nproc)
     DESTDIR="$FFBUILD_DESTDIR" ninja install
 
-    echo "Libs.private: -lstdc++ -lcrypto" >> "$FFBUILD_DESTPREFIX"/lib/pkgconfig/libaribcaption.pc
+   echo "Libs.private: -lstdc++ -lcrypto # Add libcrypto for openssl support" >> "$FFBUILD_DESTPREFIX"/lib/pkgconfig/libaribcaption.pc
 }
 
 ffbuild_configure() {
