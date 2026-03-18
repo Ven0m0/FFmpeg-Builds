@@ -16,7 +16,7 @@ TAGNAME="$2"
 
 WIKIPATH="tmp_wiki"
 WIKIFILE="Latest.md"
-git clone "https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.wiki.git" "${WIKIPATH}"
+git clone --depth 1 "https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.wiki.git" "${WIKIPATH}"
 
 echo "# Latest Autobuilds" > "${WIKIPATH}/${WIKIFILE}"
 for f in "${INPUTS}"/*.txt; do
