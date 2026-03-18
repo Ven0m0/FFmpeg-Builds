@@ -28,7 +28,8 @@ resolvescript() {
 }
 to_df() {
     local _of="${TODF:-Dockerfile}"
-    printf "%s\n" "$*" >> "$_of"
+    printf "$@" >> "$_of"
+    echo >> "$_of"
 }
 exec_dockerstage() {
     SCRIPT="$1"

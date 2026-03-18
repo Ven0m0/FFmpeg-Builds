@@ -27,5 +27,6 @@ ffbuild_configure() {
 }
 
 ffbuild_unconfigure() {
+    (( $(ffbuild_ffver) >= 701 )) || return 0
     echo --disable-liblcevc-dec
 }
