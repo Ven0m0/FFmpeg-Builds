@@ -29,6 +29,7 @@ RUN \
         -or -name 'libm.a' \
         -or -name 'libmvec.a' \
         -or -name 'librt.a' \
+        -or -name 'libpthread.a' \
         \) -delete && \
     mkdir /opt/ffbuild
 
