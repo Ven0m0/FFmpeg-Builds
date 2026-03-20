@@ -71,21 +71,21 @@ def get_git_default_branch(repo_url):
 def update_script(script_path):
     print(f"Processing {script_path}")
     issues = []
-
+    
     with open(script_path, 'r') as f:
         content = f.read()
     original_content = content
-
+    
     # Extract variables from the script
     script_vars = {}
     for match in re.finditer(r"^([^=]*)=(.*)$", content, re.MULTILINE):
         key = match.group(1)
         value = match.group(2)
         script_vars[key.strip()] = value.strip().strip('"\'')
-
+    
     if script_vars.get('SCRIPT_SKIP'):
         return None
-
+    
     for i in [''] + list(range(2, 10)):
         suffix = str(i) if i else ''
         repo_var = f'SCRIPT_REPO{suffix}'
@@ -94,33 +94,33 @@ def update_script(script_path):
         hgrev_var = f'SCRIPT_HGREV{suffix}'
         branch_var = f'SCRIPT_BRANCH{suffix}'
         tagfilter_var = f'SCRIPT_TAGFILTER{suffix}'
-
+        
         repo = script_vars.get(repo_var)
         if not repo:
             if not suffix:  # First iteration with no suffix
                 issues.append(f"{script_path}: Needs manual check (missing repo)")
             break
-
+        
         current_commit = script_vars.get(commit_var)
         current_rev = script_vars.get(rev_var)
         current_hgrev = script_vars.get(hgrev_var)
         current_branch = script_vars.get(branch_var)
         current_tagfilter = script_vars.get(tagfilter_var)
-
+        
         # SVN Repository
         if current_rev:
             print(f"Checking svn rev for {repo}...")
             cmd = ['svn', '--non-interactive', 'info',
                   '--username', 'anonymous', '--password', '', repo]
             output = run_command(cmd)
-
+            
             if output:
                 new_rev = None
                 for line in output.splitlines():
                     if line.startswith('Revision:'):
                         new_rev = line.split()[1].strip()
                         break
-
+                
                 if new_rev and new_rev != current_rev:
                     print(f"Updating {script_path}")
                     content = re.sub(
@@ -129,7 +129,7 @@ def update_script(script_path):
                         content,
                         flags=re.MULTILINE
                     )
-
+        
         # Mercurial Repository
         elif current_hgrev:
             print(f"Checking hg rev for {repo}...")
@@ -137,7 +137,7 @@ def update_script(script_path):
                 run_command(['hg', 'init'], cwd=tmphgrepo)
                 output = run_command(['hg', 'in', '-f', '-n', '-l', '1', repo],
                                   cwd=tmphgrepo)
-
+                
                 if output:
                     for line in output.splitlines():
                         if 'changeset' in line:
@@ -150,7 +150,7 @@ def update_script(script_path):
                                     content,
                                     flags=re.MULTILINE
                                 )
-
+        
         # Git Repository
         elif current_commit:
             new_commit = None
@@ -166,14 +166,14 @@ def update_script(script_path):
                 if not current_branch:
                     current_branch = get_git_default_branch(repo)
                     print(f"Found default branch {current_branch}")
-
+                
                 if current_branch:
                     cmd = ['git', 'ls-remote', '--exit-code', '--heads', '--refs',
                           repo, f'refs/heads/{current_branch}']
                     output = run_command(cmd)
                     if output:
                         new_commit = output.split()[0]
-
+            
             if new_commit is not None and new_commit != current_commit:
                 print(f"Updating {script_path}")
                 content = re.sub(
@@ -182,12 +182,12 @@ def update_script(script_path):
                     content,
                     flags=re.MULTILINE
                 )
-
+        
         else:
             # Unknown repository type
             issues.append(f"{script_path}: Unknown layout (unknown repo type)")
             break
-
+    
     if content != original_content:
         with open(script_path, 'w') as f:
             f.write(content)
@@ -199,7 +199,7 @@ def main():
     os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
     script_files = glob.glob('scripts.d/**/*.sh', recursive=True)
-
+    
     all_issues = []
     with concurrent.futures.ThreadPoolExecutor(max_workers=os.cpu_count() * 4) as executor:
         results = executor.map(update_script, script_files)
