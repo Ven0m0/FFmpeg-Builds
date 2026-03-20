@@ -1,4 +1,11 @@
+.vscode
+*.code-workspace
+*.sublime-*
 /Dockerfile*
 /ffbuild/
 /artifacts/
 /.cache/
+__pycache__/
+*.log
+/if
+/local
